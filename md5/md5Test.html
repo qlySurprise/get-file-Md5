@@ -1,0 +1,75 @@
+<html>
+<head>
+<meta charset="utf-8">
+<script type="text/javascript" src="./spark-md5.js" ></script>
+</head>
+
+<body>
+<input type="file" id="file" onchange="calculate()" />
+<div id="box"></div>
+<!-- <button id="cal" type="button" onclick="calculate()">计算md5</button> -->
+</body>
+
+<script>
+
+function calculate(){
+
+    var fileReader = new FileReader();
+    var dataFile = document.getElementById("file").files[0];
+    console.log(dataFile)
+//    file = document.getElementById("file").files[0],
+//    const _this = this
+    var spark = new SparkMD5(); //创建md5对象（基于SparkMD5）
+    if (dataFile.size > 1024 * 1024*10) {
+        var data1 = dataFile.slice(0, 1024 * 1024*10); //将文件进行分块 file.slice(start,length)
+        fileReader.readAsBinaryString(data1); //将文件读取为二进制码
+    } else {
+        fileReader.readAsBinaryString(dataFile);
+    }
+
+    //文件读取完毕之后的处理
+    //a639e28526d1809745b46bf1189594fe  6d9efe0c593b1383482feb229318e03a
+    fileReader.onload = function(e) {
+        spark.appendBinary(e.target.result);
+        var md5 = spark.end()
+        console.log(md5)
+//        _this.getMd5Checked(md5)
+    };
+
+//    var fileReader = new FileReader(),
+//        box=document.getElementById('box');
+//        blobSlice = File.prototype.mozSlice || File.prototype.webkitSlice || File.prototype.slice,
+//        file = document.getElementById("file").files[0],
+//        chunkSize = 2097152,
+//        // read in chunks of 2MB
+//        chunks = Math.ceil(file.size / chunkSize),
+//        currentChunk = 0,
+//        spark = new SparkMD5();
+//
+//    fileReader.onload = function(e) {
+//        console.log("read chunk nr", currentChunk + 1, "of", chunks);
+//        spark.appendBinary(e.target.result); // append binary string
+//        currentChunk++;
+//
+//        if (currentChunk < chunks) {
+//            loadNext();
+//        }
+//        else {
+//            console.log("finished loading");
+//            box.innerText='MD5 hash:'+spark.end();
+//            console.info("computed hash", spark.end()); // compute hash
+//        }
+//    };
+//
+//    function loadNext() {
+//        var start = currentChunk * chunkSize,
+//            end = start + chunkSize >= file.size ? file.size : start + chunkSize;
+//
+//        fileReader.readAsBinaryString(blobSlice.call(file, start, end));
+//    };
+//
+//    loadNext();
+}
+
+</script>
+</html>
